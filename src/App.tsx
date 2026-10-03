@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft, ArrowRight, BookOpen, CheckCircle2, CircleHelp,
   Clock3, FileText, LockKeyhole, MessageCircle, PauseCircle,
@@ -333,14 +333,17 @@ function Screen5() {
 
 export default function App() {
   const [screen,setScreen]=useState(0);
-  const screens = useMemo(()=>[
-    <Screen0 key="0" next={()=>setScreen(1)}/>,
-    <Screen1 key="1" next={()=>setScreen(2)}/>,
-    <Screen2 key="2" next={()=>setScreen(3)}/>,
-    <Screen3 key="3" next={()=>setScreen(4)}/>,
-    <Screen4 key="4" next={()=>setScreen(5)}/>,
-    <Screen5 key="5"/>,
-  ],[]);
+  const renderScreen = () => {
+    switch (screen) {
+      case 0: return <Screen0 next={()=>setScreen(1)}/>;
+      case 1: return <Screen1 next={()=>setScreen(2)}/>;
+      case 2: return <Screen2 next={()=>setScreen(3)}/>;
+      case 3: return <Screen3 next={()=>setScreen(4)}/>;
+      case 4: return <Screen4 next={()=>setScreen(5)}/>;
+      case 5: return <Screen5/>;
+      default: return <Screen0 next={()=>setScreen(1)}/>;
+    }
+  };
   useEffect(()=>{
     const onKey=(e:KeyboardEvent)=>{
       if((e.target as HTMLElement)?.tagName==="TEXTAREA") return;
@@ -354,7 +357,7 @@ export default function App() {
   return (
     <div className="prototype">
       <Header screen={screen}/>
-      <div className="stage">{screens[screen]}</div>
+      <div className="stage">{renderScreen()}</div>
       <BottomNav screen={screen} setScreen={setScreen}/>
     </div>
   );
